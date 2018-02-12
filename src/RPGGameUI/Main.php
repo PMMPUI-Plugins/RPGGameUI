@@ -40,11 +40,11 @@ class Main extends PluginBase implements Listener{
     }
 
     public function setui(DataPacketReceiveEvent $event){
-        $p = $event->getPacket();
+        $packet = $event->getPacket();
         $player = $event->getPlayer();
         $pname = $player->getName();
-        if ($p instanceof ModalFormResponsePacket and $p->formId == 2225) {
-            $name = json_decode($p->formData, true);
+        if ($packet instanceof ModalFormResponsePacket and $packet->formId == 2225) {
+            $name = json_decode($packet->formData, true);
 
             if ($this->BOSS) {
                 return true;
