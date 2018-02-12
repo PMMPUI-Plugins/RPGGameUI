@@ -19,7 +19,7 @@ class Main extends PluginBase implements Listener {
 	
     public function onEnable() {
         @mkdir($this->getDataFolder());
-        $this->data = new Config ( $this->getDataFolder () . "size.yml", Config::YAML,[
+        $this->data = new Config ( $this->getDataFolder () . "config.yml", Config::YAML,[
         	"포인트" => $pname : {$this->db ["포인트"]},
         	"레벨" => $pname : {$this->db ["레벨"]},
 			"보스체력" => 1500,
