@@ -81,27 +81,29 @@ class Main extends PluginBase implements Listener{
                 $event->getPlayer()->dataPacket($formPacket);
             } elseif ($packet->formId == 2226) { // 보스전 폼에 대한 응답
                 if ($responseData) { // button1: 공격을 선택한 경우
+                    $config = $this->getConfig();
+                    $health = $config->get('체력');
                     $formPacket = new ModalFormRequestPacket ();
                     if (mt_rand(0, 1)) {
                         $formPacket->formId = 2228;
                         $formPacket->formData = json_encode([
                           "type"    => "modal",
                           "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                          "content" => "§l§d[ §fRPG §d]§r§f 보스에게 공격을 게시 하셨습니다!/n§a현재 체력 : {$this->getConfig()->get('체력')}",
+                          "content" => "§l§d[ §fRPG §d]§r§f 보스에게 공격을 게시 하셨습니다!/n§a현재 체력 : {$health}",
                         ]);
                         // Todo : 다시 보스전 화면으로 돌아갑니다
                     } else {
                         $rand = mt_rand(1, 100);
                         if ($rand <= 25) {
-                            $this->getConfig()->set('체력', $this->getConfig()->get('체력') - 1500);
-                            EconomyAPI::getInstance()->addmoney($event->getPlayer(), 10000);
-
+                            $health -= 1500;
                             $formPacket->formId = 2228;
                             $formPacket->formData = json_encode([
                               "type"    => "modal",
                               "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                              "content" => "§l§d[ §fRPG §d]§r§f 보스가 죽고 돈 1만원을 받았습니다!/n§a현재 체력 : {$this->getConfig()->get('체력')}",
+                              "content" => "§l§d[ §fRPG §d]§r§f 보스가 죽고 돈 1만원을 받았습니다!/n§a현재 체력 : {$health}",
                             ]);
+                            $config->set('체력', $health);
+                            EconomyAPI::getInstance()->addmoney($event->getPlayer(), 10000);
                         }
                     }
                 } else { // button2: 방어를 선택한 경우
