@@ -116,10 +116,14 @@ class Main extends PluginBase implements Listener{
                     $config->set('체력', $health);
                     $config->set('포인트', $point);
                 } else { // button2: 방어를 선택한 경우
-
+                    return; // 응답하지 않음
                 }
             } elseif ($packet->formId == 2227) { // 메뉴 폼에 대한 응답
-
+                return; // 응답하지 않음
+            } elseif ($packet->formId == 2228) { // 공격 결과 폼에 대한 응답
+                return; // 응답하지 않음
+            } else { // 이 플러그인에서 부르지 않은 폼에 대한 응답
+                return; // 응답하지 않음
             }
             $formPacket->formData = json_encode($formData);
             $player->dataPacket($formPacket);
