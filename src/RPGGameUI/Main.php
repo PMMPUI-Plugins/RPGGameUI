@@ -80,7 +80,21 @@ class Main extends PluginBase implements Listener{
                 }
                 $event->getPlayer()->dataPacket($formPacket);
             } elseif ($packet->formId == 2226) { // 보스전 폼에 대한 응답
+                if ($responseData) { // button1: 공격을 선택한 경우
+                    $formPacket = new ModalFormRequestPacket ();
+                    if (mt_rand(0, 1)) {
+                        $formPacket->formId = 2228;
+                        $formPacket->formData = json_encode([
+                          "type"    => "modal",
+                          "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                          "content" => "§l§d[ §fRPG §d]§r§f 보스에게 공격을 게시 하셨습니다!/n§a현재 체력 : {$this->getConfig()->get('체력')}",
+                        ]);
+                        // Todo : 다시 보스전 화면으로 돌아갑니다
+                    } else {
+                    }
+                } else { // button2: 방어를 선택한 경우
 
+                }
             } elseif ($packet->formId == 2227) { // 메뉴 폼에 대한 응답
 
             }
@@ -103,14 +117,6 @@ class Main extends PluginBase implements Listener{
         public
         function AT(){
             while (true) {
-                if (mt_rand(0, 1)) {
-                    $text = [
-                      "type"    => "modal",
-                      "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                      "content" => "§l§d[ §fRPG §d]§r§f 보스에게 공격을 게시 하셨습니다!/n§a현재 체력 : {$this->db ["체력"]}",
-                    ];
-                    $this->BOSS();
-                } else {
                     if (mt_rand(1, 100) <= 25) {
                         return $text = [
                           "type"    => "modal",
