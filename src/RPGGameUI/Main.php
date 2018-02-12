@@ -66,6 +66,13 @@ class Main extends PluginBase implements Listener{
                       "button2" => "§l§d[ §f방어 §d]§r§f",
                     ]);
                 } else { // button2: 메뉴를 선택한 경우
+                    $formPacket->formId = 2227;
+                    $formPacket->formData = json_encode([
+                      "type"    => "modal",
+                      "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                      "content" => "§l§c메뉴",
+                      "button1" => "§l§c[ §fRPG상점 §c]§r§f",
+                    ]);
                 }
                 $event->getPlayer()->dataPacket($formPacket);
             }
@@ -186,20 +193,5 @@ class Main extends PluginBase implements Listener{
             $this->onSave();
 
             }
-
-            public
-            function Menu(){
-                while (true) {
-                    $player->sendMessage("§l§d[ §fRPG §d]§r§f 메뉴로 이동하셨습니다.");
-                    $text = [
-                      "type"    => "modal",
-                      "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                      "content" => "§l§c메뉴",
-                      "button1" => "§l§c[ §fRPG상점 §c]§r§f",
-                    ];
-
-                }
-            }
-        }
     }*/
 }
