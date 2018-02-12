@@ -1,8 +1,6 @@
 <?php
+namespace RPGGameUI;
 
-namespace RPGUI;
-
-use function json_encode;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\Player;
