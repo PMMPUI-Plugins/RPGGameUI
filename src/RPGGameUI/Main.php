@@ -57,6 +57,7 @@ class Main extends PluginBase implements Listener{
               "title" => "§l§d[ §fRPGGameUI §d]§r§f",
             ];
             if ($packet->formId == 2225) { // 메인 폼에 대한 응답
+                $event->setCancelled(true);
                 if ($responseData) { // button1: 보스전을 선택한 경우
                     $formPacket->formId = 2226;
                     $formData["content"] = "§l§c보스전";
@@ -74,6 +75,7 @@ class Main extends PluginBase implements Listener{
                     ];
                 }
             } elseif ($packet->formId == 2226) { // 보스전 폼에 대한 응답
+                $event->setCancelled(true);
                 if ($responseData) { // button1: 공격을 선택한 경우
                     $formPacket->formId = 2228;
                     $formData["button1"] = "§l§c[ §f확인 §c]§r§f";
@@ -120,8 +122,10 @@ class Main extends PluginBase implements Listener{
                     return; // 응답하지 않음
                 }
             } elseif ($packet->formId == 2227) { // 메뉴 폼에 대한 응답
+                $event->setCancelled(true);
                 return; // 응답하지 않음
             } elseif ($packet->formId == 2228) { // 공격 결과 폼에 대한 응답
+                $event->setCancelled(true);
                 return; // 응답하지 않음
             } else { // 이 플러그인에서 부르지 않은 폼에 대한 응답
                 return; // 응답하지 않음
