@@ -76,6 +76,8 @@ class Main extends PluginBase implements Listener{
             } elseif ($packet->formId == 2226) { // 보스전 폼에 대한 응답
                 if ($responseData) { // button1: 공격을 선택한 경우
                     $formPacket->formId = 2228;
+                    $formData["button1"] = "§l§c[ §f확인 §c]§r§f";
+                    $formData["button2"] = "§l§d[ §f확인 §d]§r§f";
                     $config = $this->getConfig();
                     $health = $config->get('체력');
                     $point = $config->get('포인트');
