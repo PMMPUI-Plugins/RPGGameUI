@@ -32,7 +32,7 @@ class Main extends PluginBase implements Listener{
             $formPacket->formData = json_encode([
               "type"    => "modal",
               "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-              "content" => "§l§cRPGUI v1.0.0/n§d레벨 : {$this->getConfig()->get('레벨')}",
+              "content" => "§l§cRPGUI v1.0.0\n§d레벨 : {$this->getConfig()->get('레벨')}",
               "button1" => "§l§c[ §f보스전 §c]§r§f",
               "button2" => "§l§d[ §f메뉴 §d]§r§f",
             ]);
@@ -81,23 +81,23 @@ class Main extends PluginBase implements Listener{
                     $point = $config->get('포인트');
                     $rand = rand(1, 500); // 원작자분께서 확률을 알려주시지 않기 때문에 빈도수로 처리합니다 : (25+30+50+50+15+35+45) * 2
                     if ($rand <= 250) { // 500 / 250
-                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 공격을 게시 하셨습니다!/n§a현재 체력 : {$health}";
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 공격을 게시 하셨습니다!\n§a현재 체력 : {$health}";
                         // Todo : 다시 보스전 화면으로 돌아갑니다
                     } elseif ($rand <= 275) { // 500 / 25
                         $health -= 1500;
                         EconomyAPI::getInstance()->addmoney($player, 10000);
-                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스가 죽고 돈 1만원을 받았습니다!/n§a현재 체력 : {$health}";
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스가 죽고 돈 1만원을 받았습니다!\n§a현재 체력 : {$health}";
                     } elseif ($rand <= 305) { // 500 / 30
                         $health -= 1500;
                         EconomyAPI::getInstance()->addmoney($$player, 5000);
-                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 협상을 하면서 몰래 죽여서 돈 5천원을 얻었습니다!/n§a현재 체력 : {$health}";
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 협상을 하면서 몰래 죽여서 돈 5천원을 얻었습니다!\n§a현재 체력 : {$health}";
                     } elseif ($rand <= 355) { // 500 / 50
                         $health -= 1500;
-                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 피해를 입혔습니다!/n§a현재 체력 : {$health}";
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 피해를 입혔습니다!\n§a현재 체력 : {$health}";
                         // Todo : 다시 보스전 화면으로 돌아갑니다
                     } elseif ($rand <= 405) { // 500 / 50
                         $formPacket->formId = 2228;
-                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 사망 당하였습니다...!/n§a현재 체력 : {$health}";
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 사망 당하였습니다...!\n§a현재 체력 : {$health}";
                     } elseif ($rand <= 420) { // 500 / 15
                         $health -= 1500;
                         $point += 55;
@@ -105,11 +105,11 @@ class Main extends PluginBase implements Listener{
                     } elseif ($rand <= 455) { // 500 / 35
                         $health -= 1500;
                         $point += 150;
-                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스를 죽이고 150포인트를 받았습니다!/n§a현재 체력 : {$health}";
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스를 죽이고 150포인트를 받았습니다!\n§a현재 체력 : {$health}";
                     } else { // 500 / 45
                         $health -= 550;
                         $formPacket->formId = 2228;
-                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 큰 피해를 입혔습니다!/n§a현재 체력 : {$health}";
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 큰 피해를 입혔습니다!\n§a현재 체력 : {$health}";
                         // Todo : 다시 보스전 화면으로 돌아갑니다
                     }
                     $config->set('체력', $health);
