@@ -47,6 +47,20 @@ class Main extends PluginBase implements Listener{
     }
 
     public function setui(DataPacketReceiveEvent $event){
+        $packet = $event->getPacket();
+        if ($packet instanceof ModalFormResponsePacket) { // 폼에 대한 응답
+            if ($packet->formId == 2225) { // 메인 폼에 대한 응답
+                $responseData = json_decode($packet->formData);
+                if (is_null($responseData)) { // 선택없이 닫힌 경우
+                    return; // 아무 작동도 하지않고 중단합니다
+                }
+                if($responseData){ // button1: 보스전을 선택한 경우
+                    
+                }else{ // button2: 메뉴를 선택한 경우
+
+                }
+            }
+        }
     }
         /*
         $packet = $event->getPacket();
