@@ -135,6 +135,16 @@ class Main extends PluginBase implements Listener{
                             ]);
                             $config->set('체력', $health);
                             $config->set('포인트', $point + 55);
+                        } elseif ($rand <= 100) {
+                            $health -= 1500;
+                            $formPacket->formId = 2228;
+                            $formPacket->formData = json_encode([
+                              "type"    => "modal",
+                              "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                              "content" => "§l§d[ §fRPG §d]§r§f 보스를 죽이고 150포인트를 받았습니다!/n§a현재 체력 : {$health}",
+                            ]);
+                            $config->set('체력', $health);
+                            $config->set('포인트', $point + 150);
                         }
                     }
                 } else { // button2: 방어를 선택한 경우
@@ -174,15 +184,6 @@ class Main extends PluginBase implements Listener{
                                     return false;
                                 } else {
                                     } else {
-                                        if (mt_rand(1, 100) <= 35) {
-                                            return $text = [
-                                              "type"    => "modal",
-                                              "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                                              "content" => "§l§d[ §fRPG §d]§r§f 보스를 죽이고 150포인트를 받았습니다!/n§a현재 체력 : {$this->db ["체력"]}",
-                                            ];
-                                            $this->db [strtolower($pname)] ["체력"] -= 1500;
-                                            $this->db [strtolower($pname)] ["포인트"] += 150;
-                                            $this->onSave();
                                         } else {
                                             if (mt_rand(1, 100) <= 45) {
                                                 return $text = [
