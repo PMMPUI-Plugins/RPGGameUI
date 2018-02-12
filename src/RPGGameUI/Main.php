@@ -47,6 +47,7 @@ class Main extends PluginBase implements Listener{
     public function setui(DataPacketReceiveEvent $event){
         $packet = $event->getPacket();
         if ($packet instanceof ModalFormResponsePacket) { // 폼에 대한 응답
+            $player = $event->getPlayer();
             $responseData = json_decode($packet->formData);
             if (is_null($responseData)) { // 선택없이 닫힌 경우
                 return; // 아무 작동도 하지않고 중단합니다
@@ -75,7 +76,6 @@ class Main extends PluginBase implements Listener{
                 }
             } elseif ($packet->formId == 2226) { // 보스전 폼에 대한 응답
                 if ($responseData) { // button1: 공격을 선택한 경우
-                    $player = $event->getPlayer();
                     $formPacket->formId = 2228;
                     $config = $this->getConfig();
                     $health = $config->get('체력');
