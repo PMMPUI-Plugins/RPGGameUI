@@ -14,16 +14,17 @@ use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use onebone\economyapi\EconomyAPI;
+use pocketmine\utils\Config;
 class Main extends PluginBase implements Listener {
 	
 	
     public function onEnable() {
         @mkdir($this->getDataFolder());
         $this->data = new Config ( $this->getDataFolder () . "config.yml", Config::YAML,[
-        	"포인트" => $pname {$this->db ["포인트"]},
-        	"레벨" => $pname {$this->db ["레벨"]},
+        	"포인트" => "",
+        	"레벨" => "",
 			"보스체력" => 1500,
-			"체력" => $pname {$this->db ["보스체력"]},
+			"체력" => ""
         ]);
         $this->db = $this->data->getAll ();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
@@ -61,7 +62,7 @@ class Main extends PluginBase implements Listener {
                 "content" => "§l§c보스전",
                 "button1" => "§l§c[ §f공격 §c]§r§f",
                 "button2" => "§l§d[ §f방어 §d]§r§f",
-                	return true;
+                ];
                 }
       if($name[1])
       $text = [
