@@ -27,16 +27,16 @@ class Main extends PluginBase implements Listener{
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
         if ($sender instanceof Player) {
-            $p = new ModalFormRequestPacket ();
-            $p->formId = 2225;
-            $p->formData = [
+            $formPacket = new ModalFormRequestPacket ();
+            $formPacket->formId = 2225;
+            $formPacket->formData = [
               "type"    => "modal",
               "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
               "content" => "§l§cRPGUI v1.0.0/n§d레벨 : {$this->getConfig()->get('레벨')}",
               "button1" => "§l§c[ §f보스전 §c]§r§f",
               "button2" => "§l§d[ §f메뉴 §d]§r§f",
             ];
-            $sender->dataPacket($p);
+            $sender->dataPacket($formPacket);
         } else {
             $sender->sendMessage("게임 내에서만 사용 가능한 명령어 입니다");
         }
