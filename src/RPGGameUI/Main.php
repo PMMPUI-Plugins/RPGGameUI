@@ -29,18 +29,12 @@ class Main extends PluginBase implements Listener{
     }
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
-
-        switch ($cmd->getName()) {
-
-            case "rpgui":
-                if ($sender instanceof Player) {
-                    $p = new ModalFormRequestPacket ();
-                    $p->formId = 2225;
-                    $p->formData = $this->ui();
-                    $sender->dataPacket($p);
-                    return true;
-
-                }
+        if ($sender instanceof Player) {
+            $p = new ModalFormRequestPacket ();
+            $p->formId = 2225;
+            $p->formData = $this->ui();
+            $sender->dataPacket($p);
+            return true;
         }
         return false;
     }
