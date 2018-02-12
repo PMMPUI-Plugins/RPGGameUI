@@ -80,6 +80,10 @@ class Main extends PluginBase implements Listener{
                     ]);
                 }
                 $event->getPlayer()->dataPacket($formPacket);
+            } elseif ($packet->formId == 2226) { // 보스전 폼에 대한 응답
+
+            } elseif ($packet->formId == 2227) { // 메뉴 폼에 대한 응답
+
             }
         }
     }
