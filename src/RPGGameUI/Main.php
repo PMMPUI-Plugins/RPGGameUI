@@ -19,19 +19,14 @@ class Main extends PluginBase implements Listener{
 
     public function onEnable(){
         @mkdir($this->getDataFolder());
-        $this->data = new Config ($this->getDataFolder() . "config.yml", Config::YAML, [
-          "포인트"  => $pname{$this->db ["포인트"]},
-          "레벨"   => $pname{$this->db ["레벨"]},
-          "보스체력" => 1500,
-          "체력"   => $pname{$this->db ["보스체력"]},
-        ]);
-        $this->db = $this->data->getAll();
+        $this->saveDefaultConfig();
+        $this->reloadConfig();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
-
         $this->getLogger()->info("§aRPGUI 로드!");
     }
 
     public function onDisable(){
+        $this->saveConfig();
         $this->getLogger()->info("§cRPGUI 언로드!");
     }
 
