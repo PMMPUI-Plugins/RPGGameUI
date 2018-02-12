@@ -84,8 +84,9 @@ class Main extends PluginBase implements Listener{
                     $config = $this->getConfig();
                     $health = $config->get('체력');
                     $point = $config->get('포인트');
-                    $formPacket = new ModalFormRequestPacket ();
-                    if (mt_rand(0, 1)) {
+                    $formPacket = new ModalFormRequestPacket();
+                    $rand = rand(1, 500); // 원작자분께서 확률을 알려주시지 않기 때문에 빈도수로 처리합니다 : (25+30+50+50+15+35+45) * 2
+                    if ($rand <= 250) { // 500 / 250
                         $formPacket->formId = 2228;
                         $formPacket->formData = json_encode([
                           "type"    => "modal",
@@ -93,59 +94,73 @@ class Main extends PluginBase implements Listener{
                           "content" => "§l§d[ §fRPG §d]§r§f 보스에게 공격을 게시 하셨습니다!/n§a현재 체력 : {$health}",
                         ]);
                         // Todo : 다시 보스전 화면으로 돌아갑니다
-                    } else {
-                        $rand = mt_rand(1, 100);
-                        if ($rand <= 25) {
-                            $health -= 1500;
-                            $formPacket->formId = 2228;
-                            $formPacket->formData = json_encode([
-                              "type"    => "modal",
-                              "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                              "content" => "§l§d[ §fRPG §d]§r§f 보스가 죽고 돈 1만원을 받았습니다!/n§a현재 체력 : {$health}",
-                            ]);
-                            $config->set('체력', $health);
-                            EconomyAPI::getInstance()->addmoney($event->getPlayer(), 10000);
-                        } elseif ($rand <= 30) {
-                            $health -= 1500;
-                            $formPacket->formId = 2228;
-                            $formPacket->formData = json_encode([
-                              "type"    => "modal",
-                              "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                              "content" => "§l§d[ §fRPG §d]§r§f 보스에게 협상을 하면서 몰래 죽여서 돈 5천원을 얻었습니다!/n§a현재 체력 : {$health}",
-                            ]);
-                            $config->set('체력', $health);
-                            EconomyAPI::getInstance()->addmoney($event->getPlayer(), 5000);
-                        } elseif ($rand <= 50) {
-                            $health -= 1500;
-                            $formPacket->formId = 2228;
-                            $formPacket->formData = json_encode([
-                              "type"    => "modal",
-                              "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                              "content" => "§l§d[ §fRPG §d]§r§f 보스에게 피해를 입혔습니다!/n§a현재 체력 : {$health}",
-                            ]);
-                            $config->set('체력', $health);
-                            // Todo : 다시 보스전 화면으로 돌아갑니다
-                        } elseif ($rand <= 65) { // 이 후로는 이해가 불가능한 확률을 사용하셨기 때문에 유추되는 확률로 적겠습니다
-                            $health -= 1500;
-                            $formPacket->formId = 2228;
-                            $formPacket->formData = json_encode([
-                              "type"    => "modal",
-                              "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                              "content" => "§l§d[ §fRPG §d]§r§f 보스에게 협박을 하다가 보스가 귀찮아서 자살 하였습니다!",
-                            ]);
-                            $config->set('체력', $health);
-                            $config->set('포인트', $point + 55);
-                        } elseif ($rand <= 100) {
-                            $health -= 1500;
-                            $formPacket->formId = 2228;
-                            $formPacket->formData = json_encode([
-                              "type"    => "modal",
-                              "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                              "content" => "§l§d[ §fRPG §d]§r§f 보스를 죽이고 150포인트를 받았습니다!/n§a현재 체력 : {$health}",
-                            ]);
-                            $config->set('체력', $health);
-                            $config->set('포인트', $point + 150);
-                        }
+                    } elseif ($rand <= 275) { // 500 / 25
+                        $health -= 1500;
+                        $formPacket->formId = 2228;
+                        $formPacket->formData = json_encode([
+                          "type"    => "modal",
+                          "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                          "content" => "§l§d[ §fRPG §d]§r§f 보스가 죽고 돈 1만원을 받았습니다!/n§a현재 체력 : {$health}",
+                        ]);
+                        $config->set('체력', $health);
+                        EconomyAPI::getInstance()->addmoney($event->getPlayer(), 10000);
+                    } elseif ($rand <= 305) { // 500 / 30
+                        $health -= 1500;
+                        $formPacket->formId = 2228;
+                        $formPacket->formData = json_encode([
+                          "type"    => "modal",
+                          "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                          "content" => "§l§d[ §fRPG §d]§r§f 보스에게 협상을 하면서 몰래 죽여서 돈 5천원을 얻었습니다!/n§a현재 체력 : {$health}",
+                        ]);
+                        $config->set('체력', $health);
+                        EconomyAPI::getInstance()->addmoney($event->getPlayer(), 5000);
+                    } elseif ($rand <= 355) { // 500 / 50
+                        $health -= 1500;
+                        $formPacket->formId = 2228;
+                        $formPacket->formData = json_encode([
+                          "type"    => "modal",
+                          "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                          "content" => "§l§d[ §fRPG §d]§r§f 보스에게 피해를 입혔습니다!/n§a현재 체력 : {$health}",
+                        ]);
+                        $config->set('체력', $health);
+                        // Todo : 다시 보스전 화면으로 돌아갑니다
+                    } elseif ($rand <= 405) { // 500 / 50
+                        $formPacket->formId = 2228;
+                        $formPacket->formData = json_encode([
+                          "type"    => "modal",
+                          "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                          "content" => "§l§d[ §fRPG §d]§r§f 보스에게 사망 당하였습니다...!/n§a현재 체력 : {$health}",
+                        ]);
+                    } elseif ($rand <= 420) { // 500 / 15
+                        $health -= 1500;
+                        $formPacket->formId = 2228;
+                        $formPacket->formData = json_encode([
+                          "type"    => "modal",
+                          "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                          "content" => "§l§d[ §fRPG §d]§r§f 보스에게 협박을 하다가 보스가 귀찮아서 자살 하였습니다!",
+                        ]);
+                        $config->set('체력', $health);
+                        $config->set('포인트', $point + 55);
+                    } elseif ($rand <= 455) { // 500 / 35
+                        $health -= 1500;
+                        $formPacket->formId = 2228;
+                        $formPacket->formData = json_encode([
+                          "type"    => "modal",
+                          "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                          "content" => "§l§d[ §fRPG §d]§r§f 보스를 죽이고 150포인트를 받았습니다!/n§a현재 체력 : {$health}",
+                        ]);
+                        $config->set('체력', $health);
+                        $config->set('포인트', $point + 150);
+                    } else { // 500 / 45
+                        $health -= 550;
+                        $formPacket->formId = 2228;
+                        $formPacket->formData = json_encode([
+                          "type"    => "modal",
+                          "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                          "content" => "§l§d[ §fRPG §d]§r§f 보스에게 큰 피해를 입혔습니다!/n§a현재 체력 : {$health}",
+                        ]);
+                        $config->set('체력', $health);
+                        // Todo : 다시 보스전 화면으로 돌아갑니다
                     }
                 } else { // button2: 방어를 선택한 경우
 
@@ -176,24 +191,11 @@ class Main extends PluginBase implements Listener{
                         } else {
                             } else {
                                 if (mt_rand(1, 100) <= 50) {
-                                    return $text = [
-                                      "type"    => "modal",
-                                      "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                                      "content" => "§l§d[ §fRPG §d]§r§f 보스에게 사망 당하였습니다...!/n§a현재 체력 : {$this->db ["체력"]}",
-                                    ];
                                     return false;
                                 } else {
                                     } else {
                                         } else {
                                             if (mt_rand(1, 100) <= 45) {
-                                                return $text = [
-                                                  "type"    => "modal",
-                                                  "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                                                  "content" => "§l§d[ §fRPG §d]§r§f 보스에게 큰 피해를 입혔습니다!/n§a현재 체력 : {$this->db ["체력"]}",
-                                                ];
-                                                $this->db [strtolower($pname)] ["체력"] -= 550;
-                                                $this->onSave();
-                                                $this->BOSS();
 
                                             }
                                         }
