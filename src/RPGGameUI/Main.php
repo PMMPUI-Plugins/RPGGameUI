@@ -2,14 +2,11 @@
 
 namespace RPGUI;
 
-use pocketmine\Server;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\Player;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\CommandExecutor;
-use pocketmine\command\ConsoleCommandSender;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\event\server\DataPacketReceiveEvent;
@@ -170,54 +167,4 @@ class Main extends PluginBase implements Listener{
             }
         }
     }
-    /*
-    $packet = $event->getPacket();
-    $player = $event->getPlayer();
-    $pname = $player->getName();
-    if ($packet instanceof ModalFormResponsePacket and $packet->formId == 2225) {
-        $name = json_decode($packet->formData, true);
-
-        if ($this->BOSS) {
-            return true;
-        }
-
-        if ($this->Menu) {
-            return true;
-        }
-        public
-        function AT(){
-            while (true) {
-                    } else {
-                        } else {
-                            } else {
-                                if (mt_rand(1, 100) <= 50) {
-                                    return false;
-                                } else {
-                                    } else {
-                                        } else {
-                                            if (mt_rand(1, 100) <= 45) {
-
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public
-        function LevelUP(){
-            while (true) {
-                $text = [
-                  "type"    => "modal",
-                  "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                  "content" => "§l§d[ §fRPG §d]§r§f Level UP! §d현재 레벨 : {$this->db ["레벨"]}");
-            $this->db [strtolower($pname)] ["레벨"] += 1;
-            $this->onSave();
-
-            }
-    }*/
 }
