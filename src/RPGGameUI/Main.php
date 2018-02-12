@@ -20,10 +20,10 @@ class Main extends PluginBase implements Listener {
     public function onEnable() {
         @mkdir($this->getDataFolder());
         $this->data = new Config ( $this->getDataFolder () . "config.yml", Config::YAML,[
-        	"포인트" => $pname : {$this->db ["포인트"]},
-        	"레벨" => $pname : {$this->db ["레벨"]},
+        	"포인트" => $pname {$this->db ["포인트"]},
+        	"레벨" => $pname {$this->db ["레벨"]},
 			"보스체력" => 1500,
-			"체력" => $pname : {$this->db ["보스체력"]},
+			"체력" => $pname {$this->db ["보스체력"]},
         ]);
         $this->db = $this->data->getAll ();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
@@ -52,24 +52,8 @@ class Main extends PluginBase implements Listener {
 		$pname = $player->getName();
 		if ($p instanceof ModalFormResponsePacket and $p->formId == 2225 ) {
 			$name = json_decode ( $p->formData, true );
-        }
-    }
-
-			private function Menu() {
-		        while (true) {
-                	$player->sendMessage("§l§d[ §fRPG §d]§r§f 보스전에 참가 하셨습니다.");
-					$text = [
-                    "type" => "modal",
-                    "title" => "§l§d[ §fRPGGameUI §d]§r§f",
-                    "content" => "§l§c보스전",
-                    "button1" => "§l§c[ §f공격 §c]§r§f",
-                    "button2" => "§l§d[ §f방어 §d]§r§f",		
-                    ];
-			        }
-				    
-                	return true;
-                }
-                if($this->BOSS());
+				
+                if($this->BOSS){
                 	return true;
                 }
 				
@@ -77,8 +61,7 @@ class Main extends PluginBase implements Listener {
                 	return true;
 					
 				}
-				
-                private function AT() {
+                public function AT() {
 		        while (true) {
 			if (mt_rand(0, 1)) {
 				$text = [
@@ -149,9 +132,11 @@ class Main extends PluginBase implements Listener {
                 $this->onSave();
 				$this->BOSS();
 				
+			            }
+			        }
                 }
 				
-				private function LevelUP() {
+				public function LevelUP() {
 		        while (true) {
                 $text = [
                     "type" => "modal",
@@ -162,7 +147,7 @@ class Main extends PluginBase implements Listener {
                 				
                 }
 				
-				private function Menu() {
+				public function Menu() {
 		        while (true) {
                 	$player->sendMessage("§l§d[ §fRPG §d]§r§f 메뉴로 이동하셨습니다.");
 					$text = [
@@ -172,9 +157,11 @@ class Main extends PluginBase implements Listener {
                     "button1" => "§l§c[ §fRPG상점 §c]§r§f",
                     ];
 					
+			            }
 			        }
+                }
 					
-					private function BOSS() {
+					public function BOSS() {
 		        while (true) {
                 	$player->sendMessage("§l§d[ §fRPG §d]§r§f 보스전에 참가 하셨습니다.");
 					$text = [
@@ -184,9 +171,9 @@ class Main extends PluginBase implements Listener {
                     "button1" => "§l§c[ §f공격 §c]§r§f",
                     "button2" => "§l§d[ §f방어 §d]§r§f",		
                     ];
+			            }
 			        }
-        }
-    }
+                }
      
     public function onCommand(CommandSender $sender, Command $cmd, string $label,array $args) : bool {
 		
