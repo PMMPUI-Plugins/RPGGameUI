@@ -47,6 +47,8 @@ class Main extends PluginBase implements Listener{
     }
 
     public function setui(DataPacketReceiveEvent $event){
+    }
+        /*
         $packet = $event->getPacket();
         $player = $event->getPlayer();
         $pname = $player->getName();
@@ -190,7 +192,5 @@ class Main extends PluginBase implements Listener{
                     ];
                 }
             }
-        }
-
-
-    }
+        }*/
+}
