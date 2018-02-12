@@ -68,10 +68,15 @@ class Main extends PluginBase implements Listener{
                 } else { // button2: 메뉴를 선택한 경우
                     $formPacket->formId = 2227;
                     $formPacket->formData = json_encode([
-                      "type"    => "modal",
+                      "type"    => "form",
                       "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
                       "content" => "§l§c메뉴",
-                      "button1" => "§l§c[ §fRPG상점 §c]§r§f",
+                      "buttons" => [
+                        [
+                          'type' => "button",
+                          'text' => "§l§c[ §fRPG상점 §c]§r§f",
+                        ],
+                      ],
                     ]);
                 }
                 $event->getPlayer()->dataPacket($formPacket);
