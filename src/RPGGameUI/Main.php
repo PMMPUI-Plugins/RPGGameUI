@@ -83,6 +83,7 @@ class Main extends PluginBase implements Listener{
                 if ($responseData) { // button1: 공격을 선택한 경우
                     $config = $this->getConfig();
                     $health = $config->get('체력');
+                    $point = $config->get('포인트');
                     $formPacket = new ModalFormRequestPacket ();
                     if (mt_rand(0, 1)) {
                         $formPacket->formId = 2228;
@@ -124,6 +125,16 @@ class Main extends PluginBase implements Listener{
                             ]);
                             $config->set('체력', $health);
                             // Todo : 다시 보스전 화면으로 돌아갑니다
+                        } elseif ($rand <= 65) { // 이 후로는 이해가 불가능한 확률을 사용하셨기 때문에 유추되는 확률로 적겠습니다
+                            $health -= 1500;
+                            $formPacket->formId = 2228;
+                            $formPacket->formData = json_encode([
+                              "type"    => "modal",
+                              "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                              "content" => "§l§d[ §fRPG §d]§r§f 보스에게 협박을 하다가 보스가 귀찮아서 자살 하였습니다!",
+                            ]);
+                            $config->set('체력', $health);
+                            $config->set('포인트', $point + 55);
                         }
                     }
                 } else { // button2: 방어를 선택한 경우
@@ -162,15 +173,6 @@ class Main extends PluginBase implements Listener{
                                     ];
                                     return false;
                                 } else {
-                                    if (mt_rand(1, 100) <= 15) {
-                                        return $text = [
-                                          "type"    => "modal",
-                                          "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                                          "content" => "§l§d[ §fRPG §d]§r§f 보스에게 협박을 하다가 보스가 귀찮아서 자살 하였습니다!",
-                                        ];
-                                        $this->db [strtolower($pname)] ["체력"] -= 1500;
-                                        $this->db [strtolower($pname)] ["포인트"] += 55;
-                                        $this->onSave();
                                     } else {
                                         if (mt_rand(1, 100) <= 35) {
                                             return $text = [
