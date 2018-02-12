@@ -22,12 +22,10 @@ class Main extends PluginBase implements Listener{
         $this->saveDefaultConfig();
         $this->reloadConfig();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
-        $this->getLogger()->info("§aRPGUI 로드!");
     }
 
     public function onDisable(){
         $this->saveConfig();
-        $this->getLogger()->info("§cRPGUI 언로드!");
     }
 
     public function ui(){
