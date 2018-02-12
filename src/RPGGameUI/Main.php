@@ -54,11 +54,20 @@ class Main extends PluginBase implements Listener{
                 if (is_null($responseData)) { // 선택없이 닫힌 경우
                     return; // 아무 작동도 하지않고 중단합니다
                 }
+
+                $formPacket = new ModalFormRequestPacket ();
                 if ($responseData) { // button1: 보스전을 선택한 경우
-
+                    $formPacket->formId = 2226;
+                    $formPacket->formData = json_encode([
+                      "type"    => "modal",
+                      "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                      "content" => "§l§c보스전",
+                      "button1" => "§l§c[ §f공격 §c]§r§f",
+                      "button2" => "§l§d[ §f방어 §d]§r§f",
+                    ]);
                 } else { // button2: 메뉴를 선택한 경우
-
                 }
+                $event->getPlayer()->dataPacket($formPacket);
             }
         }
     }
@@ -190,20 +199,6 @@ class Main extends PluginBase implements Listener{
                     ];
 
                 }
-            }
-        }
-
-        public
-        function BOSS(){
-            while (true) {
-                $player->sendMessage("§l§d[ §fRPG §d]§r§f 보스전에 참가 하셨습니다.");
-                $text = [
-                  "type"    => "modal",
-                  "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                  "content" => "§l§c보스전",
-                  "button1" => "§l§c[ §f공격 §c]§r§f",
-                  "button2" => "§l§d[ §f방어 §d]§r§f",
-                ];
             }
         }
     }*/
