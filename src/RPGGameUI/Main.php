@@ -91,6 +91,18 @@ class Main extends PluginBase implements Listener{
                         ]);
                         // Todo : 다시 보스전 화면으로 돌아갑니다
                     } else {
+                        $rand = mt_rand(1, 100);
+                        if ($rand <= 25) {
+                            $this->getConfig()->set('체력', $this->getConfig()->get('체력') - 1500);
+                            EconomyAPI::getInstance()->addmoney($event->getPlayer(), 10000);
+
+                            $formPacket->formId = 2228;
+                            $formPacket->formData = json_encode([
+                              "type"    => "modal",
+                              "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+                              "content" => "§l§d[ §fRPG §d]§r§f 보스가 죽고 돈 1만원을 받았습니다!/n§a현재 체력 : {$this->getConfig()->get('체력')}",
+                            ]);
+                        }
                     }
                 } else { // button2: 방어를 선택한 경우
 
@@ -117,15 +129,6 @@ class Main extends PluginBase implements Listener{
         public
         function AT(){
             while (true) {
-                    if (mt_rand(1, 100) <= 25) {
-                        return $text = [
-                          "type"    => "modal",
-                          "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-                          "content" => "§l§d[ §fRPG §d]§r§f 보스가 죽고 돈 1만원을 받았습니다!/n§a현재 체력 : {$this->db ["체력"]}",
-                        ];
-                        EconomyAPI::getInstance()->addmoney($player, 10000);
-                        $this->db [strtolower($pname)] ["체력"] -= 1500;
-                        $this->onSave();
                     } else {
                         if (mt_rand(1, 100) <= 30) {
                             return $text = [
