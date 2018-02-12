@@ -34,9 +34,10 @@ class Main extends PluginBase implements Listener{
             $p->formId = 2225;
             $p->formData = $this->ui();
             $sender->dataPacket($p);
-            return true;
+        } else {
+            $sender->sendMessage("게임 내에서만 사용 가능한 명령어 입니다");
         }
-        return false;
+        return true;
     }
 
     public function ui(){
