@@ -32,7 +32,7 @@ class Main extends PluginBase implements Listener{
             $formPacket->formData = json_encode([
               "type"    => "modal",
               "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-              "content" => "§l§cRPGUI v1.0.0\n§d레벨 : {$this->getConfig()->get('레벨')}",
+              "content" => "§l§cRPGUI Beta2\n§d레벨 : {$this->getConfig()->get('레벨')}",
               "button1" => "§l§c[ §f보스전 §c]§r§f",
               "button2" => "§l§d[ §f메뉴 §d]§r§f",
             ]);
