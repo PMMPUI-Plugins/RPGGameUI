@@ -23,4 +23,4 @@
 ## 풀리퀘스트는 포크하시고 풀리퀘스트를 해주세요. 소스 보고 Merge 합니다.
 
 ### 영어 ( English )
-## Pull Reqiest is Fork and Pull Reqiest. I'm See a Source And Merge.
+## Pull Request is Fork and Pull Request. I'm See a Source And Merge.
