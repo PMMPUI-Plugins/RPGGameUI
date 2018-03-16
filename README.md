@@ -8,15 +8,14 @@
  - [ ] RPG상점 ( RPGShop )
  
 ## API
-| API ||
-| 3.0.0 ||
-| 3.0.1 || 
-| 3.0.0-ALPHA10 || 
-| 3.0.0-ALPHA11 || 
-| 3.0.0-ALPHA12 || 
-| 3.0.0-ALPHA13 || 
-| 3.0.0-ALPHA14 ||
-| 3.0.0-ALPHA15 ||
+- [x] 3.0.1
+- [x] 3.0.0
+- [x] 3.0.0-ALPHA10
+- [x] 3.0.0-ALPHA11
+- [x] 3.0.0-ALPHA12
+- [x] 3.0.0-ALPHA13
+- [x] 3.0.0-ALPHA14
+- [x] 3.0.0-ALPHA15
 
 ## 풀리퀘스트 ( Pull Reqiest )
 
