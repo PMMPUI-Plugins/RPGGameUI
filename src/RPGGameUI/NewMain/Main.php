@@ -92,22 +92,41 @@ class Main extends PluginBase implements Listener{
 		$p = $event->getPacket ();
 		$player = $event->getPlayer ();
 		if ($p instanceof ModalFormResponsePacket and $p->formId == 3450 ) {
-			$name = json_decode($p->formData, true);
-			if($name) {
-				$name = "true";
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 34503;
-				$p->formData = $this->SettingLang();
-				$sender->dataPacket ($p);
-			} else {
-				$name = "false";
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 34501;
-				$p->formData = $this->Menu();
-				$sender->dataPacket ($p);
+			$responseData = json_decode($p->formData);
+        if ( is_null == null ) {
+			return false;
+		}
+		
+		if ($p->formId == 3450) {
+			$event->setCancelled(true);
+                if ($responseData) {
+					$main->formId = 3453;
+    "type"    => "modal",
+    "title"   => "§b§l[ §fRPGGameUI§b ]§f ",
+    "content" => "§b§l[ §f언어 : 한국어§b ]§f",
+    "button1" => "§b§l[ §f뒤로가기§b ]§f",
+    "button2" => "§b§l[ §f창닫기§b ]§f",
+				} else {
+				$main->formId = 3440;
+	"type" => "form",
+    "title" => "§b§l[ §fRPGGameUI§b ]§f ",
+    "content" => [
+	[
+	
+		"text" => "§b§l[ §fRPG상점§b ]§f",
+	],
+	[
+		"text" => "§b§l[ §fTest§b ]§f",
+	],
+	[
+		"text" => "§b§l[ §f뒤로가기§b ]§f"
+					]
+					]
+				];
 				}
 			}
 		}
+	}
 	
 	public function SettingLang(){ // §b§l[ §fRPGGameUI§b ]§f
 	$langform = [
@@ -124,19 +143,22 @@ class Main extends PluginBase implements Listener{
 		$p = $event->getPacket ();
 		$player = $event->getPlayer ();
 		if ($p instanceof ModalFormResponsePacket and $p->formId == 34503 ) {
-			$name = json_decode($p->formData, true);
-			if($name) {
-				$name = "true";
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 3450;
-				$p->formData = $this->MainMenu();
-				$sender->dataPacket ($p);
-			} else {
-				$name = "false";
-					$player->sendMessage("§b§l[ §fRPGGameUI§b ]§f 창을 닫았습니다.");
-					}
+			$responseData = json_decode($p->formData);
+        if ( is_null == null ) {
+			return false;
+		}
+		
+		} elseif ($p->formId == 34503) {
+			$event->setCancelled(true);
+                if ($responseData) {
+					$p->formId = 34500;
+					$p->formData = $this->MainMenu();
+					$sender->dataPacket ($p);
+				} else {
+					return false;
 				}
 			}
+		}
 		
     public function RPGSHOP(){ // §b§l[ §fRPGGameUI§b ]§f
 	$shop = [
@@ -162,25 +184,28 @@ class Main extends PluginBase implements Listener{
 		$p = $event->getPacket ();
 		$player = $event->getPlayer ();
 		if ($p instanceof ModalFormResponsePacket and $p->formId == 34500 ) {
-			$name = json_decode($p->formData, true);
-			if($name) {
-				if($name == 0){
-				$p = new ModalFormRequestPacket ();
-                $p->formId = 34502;
-				$p->formData = $this->FoodWindow();
-				$sender->dataPacket ($p);
-			}
-				if($name == 1){
-			}
-				if($name == 2){
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 3450;
-				$p->formData = $this->MainMenu();
-				$sender->dataPacket ($p);
+			$responseData = json_decode($p->formData);
+        if ( is_null == null ) {
+			return false;
+		}
+		
+		} elseif ($p->formId == 34500) {
+			$event->setCancelled(true);
+                if ($responseData) {
+					$this->FoodWindow();
+					$p->formId = 34501;
+					$p->formData = $this->FoodWindow();
+					$sender->dataPacket ($p);
+				} else {
+					// $this->Menu();
+				// } else {
+					$this->MainMenu();
+					$p->formId = 3450;
+					$p->formData = $this->MainMenu();
+					$sender->dataPacket ($p);
 				}
 			}
 		}
-	}
 	
 	 public function Menu(){ // §b§l[ §fRPGGameUI§b ]§f
 	$menu = [
@@ -192,7 +217,7 @@ class Main extends PluginBase implements Listener{
 		"text" => "§b§l[ §fRPG상점§b ]§f",
 	],
 	[
-		"text" => "§c§l[ §b팀 배틀§c ]§f",
+		"text" => "§b§l[ §fTest§b ]§f",
 	],
 	[
 		"text" => "§b§l[ §f뒤로가기§b ]§f"
@@ -206,26 +231,23 @@ class Main extends PluginBase implements Listener{
 		$p = $event->getPacket ();
 		$player = $event->getPlayer ();
 		if ($p instanceof ModalFormResponsePacket and $p->formId == 34501 ) {
-			$name = json_decode($p->formData, true);
-			if($name) {
-				if($name == 0){
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 34500;
-				$p->formData = $this->RPGSHOP();
-				$sender->dataPacket ($p);
-			}
-				if($name == 1){
-                /* $p = new ModalFormRequestPacket ();
-                $p->formId = 70000;
-				$p->formData = $this->TeamBattle();
-				$player->dataPacket ($p); */
-			}
-				if($name == 2){
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 3450;
-				$p->formData = $this->MainMenu();
-				$sender->dataPacket ($p);
-					}
+			$responseData = json_decode($p->formData);
+        if ( is_null == null ) {
+			return false;
+		}
+		
+		} elseif ($p->formId == 34501) {
+			$event->setCancelled(true);
+                if ($responseData) {
+					$this->RPGSHOP();
+					$p->formId = 34500;
+					$p->formData = $this->RPGSHOP();
+					$sender->dataPacket ($p);
+				} else {
+					$this->MainMenu();
+					$p->formId = 3450;
+					$p->formData = $this->MainMenu();
+					$sender->dataPacket ($p);
 				}
 			}
 		}
@@ -257,23 +279,35 @@ class Main extends PluginBase implements Listener{
 		$p = $event->getPacket ();
 		$player = $event->getPlayer ();
 		if ($p instanceof ModalFormResponsePacket and $p->formId == 34502 ) {
-			$name = json_decode($p->formData, true);
-			if($name) {
-				if($name == 0){
-			}
-				if($name == 1){
-			}
-				if($name == 2){
-			}
-				if($name == 3){
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 3450;
-				$p->formData = $this->MainMenu();
-				$player->dataPacket ($p);
+			$responseData = json_decode($p->formData);
+        if ( is_null == null ) {
+			return false;
+		}
+		
+		} elseif ($p->formId == 34502) {
+			$event->setCancelled(true);
+                if ($responseData) {
+					$this->SuperMeatWindow();
+				} else {
+					$this->RedFishWindow();
+				}
+					} else {
+						$this->ChickenWindow();
+						if ($responseData) {
+						} else {
+							$this->MainMenu();
+							$p->formId = 3450;
+							$p->formData = $this->MainMenu();
+							$sender->dataPacket ($p);
 					}
 				}
 			}
+		
+		/* public function onInteract(PlayerInteractEvent $ev) {
+		if ($ev->getItem()->getId() === '339') {
+			$this->MainMenu();
 		}
+	} */
 		
 		public function onCommand(CommandSender $sender, Command $cmd, string $label,array $args) : bool {
 			
