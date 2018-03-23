@@ -22,7 +22,7 @@ use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\event\server\DataPacketReceiveEvent;
 # API
 use onebone\economyapi\EconomyAPI;
-class Main extends PluginBase implements Listener{
+class ShopTestMain extends PluginBase implements Listener{
     public function onEnable(){
         @mkdir($this->getDataFolder());
         $this->bossDB = new Config ( $this->getDataFolder () . "boss.yml", Config::YAML, [
