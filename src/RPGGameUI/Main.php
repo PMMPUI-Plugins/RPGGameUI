@@ -149,7 +149,22 @@ class Main extends PluginBase implements Listener{
                         $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 큰 피해를 입혔습니다!\n§a현재 체력 : {$health}";
                     }
                 } else { // button2: 방어를 선택한 경우
-                    return; // 응답하지 않음
+                    $formData["button1"] = "§l§a[ §f다음 §a]§r§f";
+                    $formData["button2"] = "§l§a[ §f포기 §a]§r§f";
+					$name = $player->getName();
+                    $config = $this->getConfig();
+                    $health = $config->bossDB [strtolower($name)] ["보스체력"];
+                    $point = $config->pointDB [strtolower($name)] ["포인트"];
+                    $rand = rand(1, 300);
+                    if ($rand <= 10) { // 500 / 10
+                        $health -= 1500;
+                        $point += 200;
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 방패에 맞아서 보스가 사망하여 포인트 200포인트를 받았습니다.\n§a현재 체력 : {$health}";
+						return false;
+                    } else { // 300 / 165
+                        $formPacket->formId = 2228;
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 방어를 하였습니다!\n§a현재 체력 : {$health}";
+                    }
                 }
             } elseif ($packet->formId == 2227) { // 메뉴 폼에 대한 응답
                 $event->setCancelled(true);
