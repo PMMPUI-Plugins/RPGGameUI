@@ -55,14 +55,13 @@ class Main extends PluginBase implements Listener{
 		}
 	}
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
-		$OS = "NoobOS";
         if ($sender instanceof Player) {
             $formPacket = new ModalFormRequestPacket ();
             $formPacket->formId = 2225;
             $formPacket->formData = json_encode([
               "type"    => "modal",
               "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-              "content" => "§l§cRPGUI \n§dvFinal_Beta\n§a랭크 ( Rank ) : No Rank...\n§bOS : {$OS}\n§e공지 ( Notice ) : 오류가 많습니다. ( Too Many Errors )",
+              "content" => "§l§cRPGUI \n§dvFinal_Beta",
               "button1" => "§l§c[ §f보스전 §c]§r§f ( Boss Battle )",
               "button2" => "§l§d[ §f메뉴 §d]§r§f ( Menu )",
             ]);
@@ -123,7 +122,7 @@ class Main extends PluginBase implements Listener{
 						return false;
                     } elseif ($rand <= 305) { // 500 / 30
                         $health -= 1500;
-                        EconomyAPI::getInstance()->addmoney($player, 5000);
+                        EconomyAPI::getInstance()->addmoney($$player, 5000);
                         $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 협상을 하면서 몰래 죽여서 돈 5천원을 얻었습니다!\n§a현재 체력 : {$health}";
 						return false;
                     } elseif ($rand <= 355) { // 500 / 50
@@ -168,7 +167,8 @@ class Main extends PluginBase implements Listener{
                 }
             } elseif ($packet->formId == 2227) { // 메뉴 폼에 대한 응답
                 $event->setCancelled(true);
-                $formPacket->formId = 2227;
+				if ($responseData) {
+                $formPacket->formId = 2229;
                 $formData["type"] = "form";
                 $formData["content"] = "§l§cRPGShop";
                 $formData["buttons"] = [
@@ -178,15 +178,83 @@ class Main extends PluginBase implements Listener{
 					],
 					[
 						'type' => "button",
-						'text' => "§l§b[ §f레벨업 물약 §b]§r§f ( Level Up Potion )",
+						'text' => "§l§b[ §f그외 §b]§r§f ( More )",
+                      ],
+                    ];
+				}
+			} elseif ($packet->formId == 2229) { // 아이템 구매,판매폼에 대한 응답
+                $event->setCancelled(true);
+				if ($responseData) {
+                $formPacket->formId = 2210;
+                $formData["type"] = "form";
+                $formData["content"] = "§l§cRPGShop";
+                $formData["buttons"] = [
+                      [
+                        'type' => "button",
+                        'text' => "§l§a[ §f구매 §a]§r§f ( Buy )",
 					],
 					[
 						'type' => "button",
-						'text' => "§l§b[ §fNo More... §b]§r§f",
+						'text' => "§l§b[ §f판매 §b]§r§f ( Sell )",
                       ],
                     ];
+			} else {
+				if ($responseData) {
+				$formPacket->formId = 2211;
+                $formData["type"] = "form";
+                $formData["content"] = "§l§cRPGShop";
+                $formData["buttons"] = [
+                      [
+                        'type' => "button",
+                        'text' => "§l§a[ §f스킬 §a]§r§f ( Skill )",
+					],
+					[
+						'type' => "button",
+						'text' => "§l§b[ §f음식 §b]§r§f ( Food )",
+                      ],
+                    ];
+					}
+				}
+			} elseif ($packet->formId == 2210) { // 마인 음료수 구매,판매 폼에 대한 응답
+                $event->setCancelled(true);
+				if ($responseData) {
+                $formPacket->formId = 2213;
+                $formData["type"] = "custom_form";
+                $formData["content"] = "§l§cRPGShop";
+                $formData["buttons"] = [
+                      [
+                        'type' => "silder",
+						'min' => "0",
+						'max' => "64",
+                        'text' => "§l§a갯수 ( Amount )",
+					],
+					[
+						'type' => "button",
+						'text' => "§l§b[ §f구매 §b]§r§f ( Buy )",
+                      ],
+                    ];
+			} else {
+				if ($responseData) {
+				$formPacket->formId = 2214;
+				$formData["type"] = "custom_form";
+                $formData["content"] = "§l§cRPGShop";
+                $formData["buttons"] = [
+                [
+                        'type' => "silder",
+						'min' => "0",
+						'max' => "64",
+                        'text' => "§l§a갯수 ( Amount )",
+					],
+					[
+						'type' => "button",
+						'text' => "§l§b[ §f판매 §b]§r§f ( Sell )",
+                      ],
+                    ];
+					}
+				}
             } elseif ($packet->formId == 2228) { // 공격 결과 폼에 대한 응답
                 $event->setCancelled(true);
+				if ($responseData) {
 				$formPacket->formId = 2226;
                     $formData["content"] = "§l§c보스전 ( Boss Battle )";
                     $formData["button1"] = "§l§c[ §f공격 §c]§r§f ( Attack )";
@@ -196,6 +264,7 @@ class Main extends PluginBase implements Listener{
             }
             $formPacket->formData = json_encode($formData);
             $player->dataPacket($formPacket);
+			}
         }
     }
 }
