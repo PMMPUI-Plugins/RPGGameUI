@@ -1,5 +1,9 @@
 # RPGGameUI
 
+[![](https://poggit.pmmp.io/shield.dl/RPGGameUI)](https://poggit.pmmp.io/p/RPGGameUI) / [![](https://poggit.pmmp.io/shield.dl.total/RPGGameUI)](https://poggit.pmmp.io/p/RPGGameUI)
+
+[![PoggitCI Badge](https://poggit.pmmp.io/ci.badge/fuyutsuki/Texter/Texter)](https://poggit.pmmp.io/ci/fuyutsuki/Texter/Texter)
+
 ## TODO
  - [x] PHP7.2
  - [x] PMMP API
