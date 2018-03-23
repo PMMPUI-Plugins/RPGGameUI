@@ -1,294 +1,186 @@
 <?php
-
+// GitHub @PresentKim @BuildLike
 namespace RPGGameUI;
-
+# Plugin Storge Use
+use RPGGameUI\Sounds;
+# Plugin
 use pocketmine\plugin\PluginBase;
+# Listener
 use pocketmine\event\Listener;
+# Player
 use pocketmine\Player;
+# Command
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+# Config
+use pocketmine\utils\Config;
+# Event
+use pocketmine\event\player\PlayerJoinEvent;
+# UI
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\event\server\DataPacketReceiveEvent;
-use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\utils\Config;
+# API
 use onebone\economyapi\EconomyAPI;
-
 class Main extends PluginBase implements Listener{
-
     public function onEnable(){
         @mkdir($this->getDataFolder());
-        $this->langDB = new Config ( $this->getDataFolder () . "lang.yml", Config::YAML,[
-         "lang" => "ko",
-        ]);
-        $this->langDB = $this->langDB->getAll ();
+        $this->bossDB = new Config ( $this->getDataFolder () . "boss.yml", Config::YAML, [
+		"기본체력" => "1500",
+		]);
+        $this->bossDB = $this->bossDB->getAll ();
+		$this->levelDB = new Config ( $this->getDataFolder () . "level.yml", Config::YAML, [
+		"기본레벨" => "1",
+		]);
+        $this->levelDB = $this->levelDB->getAll ();
+		$this->pointDB = new Config ( $this->getDataFolder () . "point.yml", Config::YAML, [
+		"기본포인트" => "1500",
+		]);
+        $this->pointDB = $this->pointDB->getAll ();
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
     }
-
     public function onDisable(){
         $this->saveConfig();
     }
-/* 		}
-		$lang = new Config($this->getDataFolder() . "/lang.yml", Config::YAML);
-		if($lang->get("en")==null)
-		{
-			$messages = array();
-			$messages["boss"] = "§b§l[ §fBoss§b ]§f";
-			$messages["character"] = "§b§l[ §fCharacter§b ]§f";
-			$messages["prefix"] = "§b§l[ §fRPGGameUI§b ]§f ";
-			$messages["food"] = "§b§l[ §fFood§b ]§f";
-			$messages["heart"] = "§b§l[ §fHeart : §b ]§f";
-			$messages["yes"] = "§b§l[ §fYes§b ]§f";
-			$messages["rpgshop"] = "§b§l[ §fRPGSHOP§b ]§f";
-			$messages["no"] = "§b§l[ §fNo§b ]§f";
-			$messages["changelang"] = "§aComplete Change Language§f";
-			$messages["langhelp"] = "§b§lUsage : /lang <ko/en> §f";
-			$messages["back"] = "§b§l[ §fBack§b ]§f";
-			$messages["menu"] = "§b§l[ §fMenu§b ]§f";
-			$messages["foodone"] = "§b§l[ §fSuper Meat§b ]§f";
-			$messages["foodtwo"] = "§b§l[ §fRed Fish§b ]§f";
-			$messages["foodthree"] = "§b§l[ §fChicken§b ]§f";
-			$messages["settinglang"] = "§b§l[ §fLang§b ]§f";
-			$messages["name"] = "§b§l[ §fMy Name§b ]§f";
-			$lang->set("en",$messages);
-		}
-		$lang->save();
-		if($lang->get("ko")==null)
-		{
-			$messages = array();
-			$messages["boss"] = "§b§l[ §f보스§b ]§f";
-			$messages["character"] = "§b§l[ §f캐릭터§b ]§f";
-			$messages["prefix"] = "§b§l[ §fRPGGameUI§b ]§f ";
-			$messages["food"] = "§b§l[ §f음식§b ]§f";
-			$messages["heart"] = "§b§l[ §f체력 : §b ]§f";
-			$messages["yes"] = "§b§l[ §f예§b ]§f";
-			$messages["rpgshop"] = "§b§l[ §fRPGSHOP§b ]§f";
-			$messages["no"] = "§b§l[ §f아니오§b ]§f";
-			$messages["changelang"] = "§a언어를 변경하는데 성공 하였습니다.§f";
-			$messages["langhelp"] = "§b§l사용법 : /lang <ko/en> §f";
-			$messages["back"] = "§b§l[ §f뒤로가기§b ]§f";
-			$messages["menu"] = "§b§l[ §f메뉴§b ]§f";
-			$messages["foodone"] = "§b§l[ §f슈퍼 고기§b ]§f";
-			$messages["foodtwo"] = "§b§l[ §f빨간 물고기§b ]§f";
-			$messages["foodthree"] = "§b§l[ §f치킨§b ]§f";
-			$messages["settinglang"] = "§b§l[ §f언어§b ]§f";
-			$messages["name"] = "§b§l[ §f닉네임§b ]§f";
-			$lang->set("ko",$messages);
-			$lang->save();
-		} */
-		
-	public function MainMenu(){ // §b§l[ §fRPGGameUI§b ]§f
-	$main = [
-    "type"    => "modal",
-    "title"   => "§b§l[ §fRPGGameUI§b ]§f ",
-    "content" => "§b§l[ §f레벨 : 1§b ]§f",
-    "button1" => "§b§l[ §f언어§b ]§f",
-    "button2" => "§b§l[ §f메뉴§b ]§f",
-				];
-			return json_encode ( $main );
-		}
-		
-		public function UIData(DataPacketReceiveEvent $event) {
-		$p = $event->getPacket ();
-		$player = $event->getPlayer ();
-		if ($p instanceof ModalFormResponsePacket and $p->formId == 3450 ) {
-			$name = json_decode($p->formData, true);
-			if($name) {
-				$name = "true";
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 34503;
-				$p->formData = $this->SettingLang();
-				$sender->dataPacket ($p);
-			} else {
-				$name = "false";
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 34501;
-				$p->formData = $this->Menu();
-				$sender->dataPacket ($p);
-				}
-			}
-		}
-	
-	public function SettingLang(){ // §b§l[ §fRPGGameUI§b ]§f
-	$langform = [
-    "type"    => "modal",
-    "title"   => "§b§l[ §fRPGGameUI§b ]§f ",
-    "content" => "§b§l[ §f언어 : 한국어§b ]§f",
-    "button1" => "§b§l[ §f뒤로가기§b ]§f",
-    "button2" => "§b§l[ §f창닫기§b ]§f",
-				];
-			return json_encode ( $langform );
-		}
-		
-		public function LangData(DataPacketReceiveEvent $event) {
-		$p = $event->getPacket ();
-		$player = $event->getPlayer ();
-		if ($p instanceof ModalFormResponsePacket and $p->formId == 34503 ) {
-			$name = json_decode($p->formData, true);
-			if($name) {
-				$name = "true";
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 3450;
-				$p->formData = $this->MainMenu();
-				$sender->dataPacket ($p);
-			} else {
-				$name = "false";
-					$player->sendMessage("§b§l[ §fRPGGameUI§b ]§f 창을 닫았습니다.");
-					}
-				}
-			}
-		
-    public function RPGSHOP(){ // §b§l[ §fRPGGameUI§b ]§f
-	$shop = [
-    "type" => "form",
-    "title" => "§b§l[ §fRPGGameUI§b ]§f ",
-    "content" => [
-	[
-	
-		"text" => "§b§l[ §f음식§b ]§f",
-	],
-	[
-		"text" => "§b§l[ §f캐릭터§b ]§f",
-	],
-	[
-		"text" => "§b§l[ §f뒤로가기§b ]§f"
-					]
-					]
-				];
-			return json_encode ( $shop );
-		}
-		
-		public function RPGSHOPData(DataPacketReceiveEvent $event) {
-		$p = $event->getPacket ();
-		$player = $event->getPlayer ();
-		if ($p instanceof ModalFormResponsePacket and $p->formId == 34500 ) {
-			$name = json_decode($p->formData, true);
-			if($name) {
-				if($name == 0){
-				$p = new ModalFormRequestPacket ();
-                $p->formId = 34502;
-				$p->formData = $this->FoodWindow();
-				$sender->dataPacket ($p);
-			}
-				if($name == 1){
-			}
-				if($name == 2){
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 3450;
-				$p->formData = $this->MainMenu();
-				$sender->dataPacket ($p);
-				}
-			}
+	public function onJoin (PlayerJoinEvent $event){
+    	$player = $event->getPlayer();
+		$name = $player->getName();
+		if(!isset( $this->levelDB [strtolower($name)] ) ){
+			$this->levelDB [strtolower($name)] ["레벨"] = 1;
+			$this->pointDB [strtolower($name)] ["포인트"] = 1500;
+			$this->onSave();
+		} else {
+			$this->pointDB [strtolower($name)] ["보스체력"] = 1500;
+			$this->onSave();
 		}
 	}
-	
-	 public function Menu(){ // §b§l[ §fRPGGameUI§b ]§f
-	$menu = [
-    "type" => "form",
-    "title" => "§b§l[ §fRPGGameUI§b ]§f ",
-    "content" => [
-	[
-	
-		"text" => "§b§l[ §fRPG상점§b ]§f",
-	],
-	[
-		"text" => "§c§l[ §b팀 배틀§c ]§f",
-	],
-	[
-		"text" => "§b§l[ §f뒤로가기§b ]§f"
-					]
-					]
-				];
-			return json_encode ( $menu );
-		}
-		
-		public function MenuData(DataPacketReceiveEvent $event) {
-		$p = $event->getPacket ();
-		$player = $event->getPlayer ();
-		if ($p instanceof ModalFormResponsePacket and $p->formId == 34501 ) {
-			$name = json_decode($p->formData, true);
-			if($name) {
-				if($name == 0){
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 34500;
-				$p->formData = $this->RPGSHOP();
-				$sender->dataPacket ($p);
-			}
-				if($name == 1){
-                /* $p = new ModalFormRequestPacket ();
-                $p->formId = 70000;
-				$p->formData = $this->TeamBattle();
-				$player->dataPacket ($p); */
-			}
-				if($name == 2){
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 3450;
-				$p->formData = $this->MainMenu();
-				$sender->dataPacket ($p);
-					}
-				}
-			}
-		}
-		
-	public function FoodWindow(){ // §b§l[ §fRPGGameUI§b ]§f
-	$food = [
-    "type" => "form",
-    "title" => "§b§l[ §fRPGGameUI§b ]§f ",
-    "content" => [
-	[
-	
-		"text" => "§b§l[ §f슈퍼 고기§b ]§f",
-	],
-	[
-		"text" => "§b§l[ §f빨간 물고기§b ]§f",
-	],
-	[
-		"text" => "§b§l[ §f치킨§b ]§f",
-	],
-	[
-		"text" => "§b§l[ §f뒤로가기§b ]§f"
-					]
-					]
-				];
-			return json_encode ( $food );
-		}
-		
-		public function FoodData(DataPacketReceiveEvent $event) {
-		$p = $event->getPacket ();
-		$player = $event->getPlayer ();
-		if ($p instanceof ModalFormResponsePacket and $p->formId == 34502 ) {
-			$name = json_decode($p->formData, true);
-			if($name) {
-				if($name == 0){
-			}
-				if($name == 1){
-			}
-				if($name == 2){
-			}
-				if($name == 3){
-                $p = new ModalFormRequestPacket ();
-                $p->formId = 3450;
-				$p->formData = $this->MainMenu();
-				$player->dataPacket ($p);
-					}
-				}
-			}
-		}
-		
-		public function onCommand(CommandSender $sender, Command $cmd, string $label,array $args) : bool {
-			
-		switch($cmd->getName()){
-		
-			case "rpgui":			    
-				if($sender instanceof Player) {
-                $p = new ModalFormRequestPacket ();
-				$p->formId = 3450;
-				$p->formData = $this->MainMenu();
-				$sender->dataPacket ($p);
-				return true;
-                break;
-					}
-				}
-			}
-		}
-					
+    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		$name = $player->getName();
+        if ($sender instanceof Player) {
+            $formPacket = new ModalFormRequestPacket ();
+            $formPacket->formId = 2225;
+            $formPacket->formData = json_encode([
+              "type"    => "modal",
+              "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+              "content" => "§l§cRPGUI \n§d레벨 ( Level ) : {$config->pointDB [strtolower($name)] ["포인트"]}",
+              "button1" => "§l§c[ §f보스전 §c]§r§f( Boss Battle )",
+              "button2" => "§l§d[ §f메뉴 §d]§r§f( Menu )",
+            ]);
+            $sender->dataPacket($formPacket);
+        } else {
+            $sender->sendMessage("게임 내에서만 사용 가능한 명령어 입니다");
+        }
+        return true;
+    }
+    public function RPGData(DataPacketReceiveEvent $event){
+        $packet = $event->getPacket();
+        if ($packet instanceof ModalFormResponsePacket) { // 폼에 대한 응답
+            $player = $event->getPlayer();
+            $responseData = json_decode($packet->formData);
+            if (is_null($responseData)) { // 선택없이 닫힌 경우
+                return; // 아무 작동도 하지않고 중단합니다
+            }
+            $formPacket = new ModalFormRequestPacket();
+            $formData = [
+              "type"  => "modal",
+              "title" => "§l§d[ §fRPGGameUI §d]§r§f",
+            ];
+            if ($packet->formId == 2225) { // 메인 폼에 대한 응답
+                $event->setCancelled(true);
+                if ($responseData) { // button1: 보스전을 선택한 경우
+                    $formPacket->formId = 2226;
+                    $formData["content"] = "§l§c보스전 ( Boss Battle )";
+                    $formData["button1"] = "§l§c[ §f공격 §c]§r§f ( Attack )";
+                    $formData["button2"] = "§l§d[ §f방어 §d]§r§f ( Defense )";
+                } else { // button2: 메뉴를 선택한 경우
+                    $formPacket->formId = 2227;
+                    $formData["type"] = "form";
+                    $formData["content"] = "§l§c메뉴 ( Menu )";
+                    $formData["buttons"] = [
+                      [
+                        'type' => "button",
+                        'text' => "§l§c[ §fRPG상점 §c]§r§f ( RPGShop )",
+                      ],
+                    ];
+                }
+            } elseif ($packet->formId == 2226) { // 보스전 폼에 대한 응답
+                $event->setCancelled(true);
+                if ($responseData) { // button1: 공격을 선택한 경우
+                    $formPacket->formId = 2228;
+                    $formData["button1"] = "§l§a[ §f다음 §a]§r§f";
+                    $formData["button2"] = "§l§a[ §f포기 §a]§r§f";
+					$name = $player->getName();
+                    $config = $this->getConfig();
+                    $health = $config->bossDB [strtolower($name)] ["보스체력"];
+                    $point = $config->pointDB [strtolower($name)] ["포인트"];
+                    $rand = rand(1, 500); // 원작자분께서 확률을 알려주시지 않기 때문에 빈도수로 처리합니다 : (25+30+50+50+15+35+45) * 2
+                    if ($rand <= 250) { // 500 / 250
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 공격을 게시 하셨습니다!\n§a현재 체력 : {$health}";
+                    } elseif ($rand <= 275) { // 500 / 25
+                        $health -= 1500;
+                        EconomyAPI::getInstance()->addmoney($player, 10000);
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스가 죽고 돈 1만원을 받았습니다!\n§a현재 체력 : {$health}";
+						return false;
+                    } elseif ($rand <= 305) { // 500 / 30
+                        $health -= 1500;
+                        EconomyAPI::getInstance()->addmoney($$player, 5000);
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 협상을 하면서 몰래 죽여서 돈 5천원을 얻었습니다!\n§a현재 체력 : {$health}";
+						return false;
+                    } elseif ($rand <= 355) { // 500 / 50
+                        $health -= 100;
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 피해를 입혔습니다!\n§a현재 체력 : {$health}";
+                    } elseif ($rand <= 405) { // 500 / 50
+                        $formPacket->formId = 2228;
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 사망 당하였습니다...!\n§a현재 체력 : {$health}";
+						return false;
+                    } elseif ($rand <= 420) { // 500 / 15
+                        $health -= 1500;
+                        $point += 55;
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 협박을 하다가 보스가 귀찮아서 자살 하였습니다!";
+						return false;
+                    } elseif ($rand <= 455) { // 500 / 35
+                        $health -= 1500;
+                        $point += 150;
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스를 죽이고 150포인트를 받았습니다!\n§a현재 체력 : {$health}";
+						return false;
+                    } else { // 500 / 45
+                        $health -= 550;
+                        $formPacket->formId = 2228;
+                        $formData["content"] = "§l§d[ §fRPG §d]§r§f 보스에게 큰 피해를 입혔습니다!\n§a현재 체력 : {$health}";
+                    }
+                } else { // button2: 방어를 선택한 경우
+                    return; // 응답하지 않음
+                }
+            } elseif ($packet->formId == 2227) { // 메뉴 폼에 대한 응답
+                $event->setCancelled(true);
+                $formPacket->formId = 2227;
+                $formData["type"] = "form";
+                $formData["content"] = "§l§cRPGShop";
+                $formData["buttons"] = [
+                      [
+                        'type' => "button",
+                        'text' => "§l§a[ §f마인 음료수 §a]§r§f ( Mine Water )",
+					],
+					[
+						'type' => "button",
+						'text' => "§l§b[ §f레벨업 물약 §b]§r§f ( Level Up Potion )",
+					],
+					[
+						'type' => "button",
+						'text' => "§l§b[ §fNo More... §b]§r§f",
+                      ],
+                    ];
+            } elseif ($packet->formId == 2228) { // 공격 결과 폼에 대한 응답
+                $event->setCancelled(true);
+				$formPacket->formId = 2226;
+                    $formData["content"] = "§l§c보스전 ( Boss Battle )";
+                    $formData["button1"] = "§l§c[ §f공격 §c]§r§f ( Attack )";
+                    $formData["button2"] = "§l§d[ §f방어 §d]§r§f ( Defense )";
+            } else { // 이 플러그인에서 부르지 않은 폼에 대한 응답
+                return; // 응답하지 않음
+            }
+            $formPacket->formData = json_encode($formData);
+            $player->dataPacket($formPacket);
+        }
+    }
+}

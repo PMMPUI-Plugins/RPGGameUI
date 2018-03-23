@@ -1,11 +1,12 @@
 # RPGGameUI
 
-## 목표 ( PLAN )
+## TODO
  - [x] PHP7.2
  - [x] PMMP API
  - [x] UI창 ( UI Window )
  - [ ] 다중 언어 ( MultiLanguage )
  - [ ] RPG상점 ( RPGShop )
+ - [ ] 자동 업데이트 ( AutoUpdater )
  
 ## API
 - [x] 3.0.1
@@ -24,3 +25,10 @@
 
 ### 영어 ( English )
 ## Pull Request is Fork and Pull Request. I'm See a Source And Merge.
+
+
+
+
+
+
+#### Test
