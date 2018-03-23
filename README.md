@@ -1,5 +1,6 @@
 # RPGGameUI
 
+[![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/PMMPUI-Plugins/RPGGameUI/blob/master/LICENSE)
 [![PoggitCI Badge](https://poggit.pmmp.io/ci.badge/PMMPUI-Plugins/RPGGameUI/RPGGameUI)](https://poggit.pmmp.io/ci/PMMPUI-Plugins/RPGGameUI/RPGGameUI)
 
 ## TODO
