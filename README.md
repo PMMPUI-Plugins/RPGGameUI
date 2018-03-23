@@ -1,8 +1,6 @@
 # RPGGameUI
 
-[![](https://poggit.pmmp.io/shield.dl/RPGGameUI)](https://poggit.pmmp.io/p/RPGGameUI) / [![](https://poggit.pmmp.io/shield.dl.total/RPGGameUI)](https://poggit.pmmp.io/p/RPGGameUI)
-
-[![PoggitCI Badge](https://poggit.pmmp.io/ci.badge/fuyutsuki/Texter/Texter)](https://poggit.pmmp.io/ci/fuyutsuki/Texter/Texter)
+[![PoggitCI Badge](https://poggit.pmmp.io/ci.badge/PMMPUI-Plugins/RPGGameUI/RPGGameUI)](https://poggit.pmmp.io/ci/PMMPUI-Plugins/RPGGameUI/RPGGameUI)
 
 ## TODO
  - [x] PHP7.2
