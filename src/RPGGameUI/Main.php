@@ -3,8 +3,10 @@
 namespace RPGGameUI;
 # Plugin Storge Use
 use RPGGameUI\Sounds;
-# Plugin
+# PluginBase
 use pocketmine\plugin\PluginBase;
+use pocketmine\item\Item;
+use pocketmine\block\Block;
 # Listener
 use pocketmine\event\Listener;
 # Player
@@ -14,8 +16,12 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 # Config
 use pocketmine\utils\Config;
+# Utils
+use pocketmine\utils;
 # Event
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerItemHeldEvent;
+use pocketmine\event\player\PlayerInteractEvent;
 # UI
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
@@ -23,6 +29,8 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 # API
 use onebone\economyapi\EconomyAPI;
 class Main extends PluginBase implements Listener{
+	public $getOS;
+	public $sender;
     public function onEnable(){
         @mkdir($this->getDataFolder());
         $this->bossDB = new Config ( $this->getDataFolder () . "boss.yml", Config::YAML, [
@@ -37,6 +45,8 @@ class Main extends PluginBase implements Listener{
 		"기본포인트" => "1500",
 		]);
         $this->pointDB = $this->pointDB->getAll ();
+		$this->roomDB = new Config ( $this->getDataFolder () . "rooms.yml", Config::YAML);
+        $this->roomDB = $this->roomDB->getAll ();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
     }
     public function onDisable(){
@@ -55,14 +65,14 @@ class Main extends PluginBase implements Listener{
 		}
 	}
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
-		$OS = "NoobOS";
+		$OS = "Dev";
         if ($sender instanceof Player) {
             $formPacket = new ModalFormRequestPacket ();
             $formPacket->formId = 2225;
             $formPacket->formData = json_encode([
               "type"    => "modal",
               "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
-              "content" => "§l§cRPGUI \n§dvFinal_Beta\n§a랭크 ( Rank ) : No Rank...\n§bOS : {$OS}\n§e공지 ( Notice ) : 오류가 많습니다. ( Too Many Errors )",
+              "content" => "\n§l§cRPGUI \n§dvFinal_Beta\n§a랭크 ( Rank ) : No Rank...\n§bOS : {$OS}\n§e공지 ( Notice ) : 오류가 많습니다. \n( Too Many Errors )",
               "button1" => "§l§c[ §f보스전 §c]§r§f ( Boss Battle )",
               "button2" => "§l§d[ §f메뉴 §d]§r§f ( Menu )",
             ]);
@@ -100,6 +110,14 @@ class Main extends PluginBase implements Listener{
                       [
                         'type' => "button",
                         'text' => "§l§c[ §fRPG상점 §c]§r§f ( RPGShop )",
+					  ],
+					  [
+						'type' => "button",
+						'text' => "§l§a[ §f코인 §a]§r§f ( Coin )",
+					  ],
+					  [
+						'type' => "button",
+						'text' => "§l§6[ §f팀 배틀 §6]§r§f ( Team Battle )",
                       ],
                     ];
                 }
@@ -168,7 +186,8 @@ class Main extends PluginBase implements Listener{
                 }
             } elseif ($packet->formId == 2227) { // 메뉴 폼에 대한 응답
                 $event->setCancelled(true);
-                $formPacket->formId = 2227;
+				if ($responseData) {
+                $formPacket->formId = 2229;
                 $formData["type"] = "form";
                 $formData["content"] = "§l§cRPGShop";
                 $formData["buttons"] = [
@@ -185,9 +204,113 @@ class Main extends PluginBase implements Listener{
 						'text' => "§l§b[ §fNo More... §b]§r§f",
                       ],
                     ];
-            } elseif ($packet->formId == 2228) { // 공격 결과 폼에 대한 응답
+/* 				} else {
+				$formPacket->formId = 2210;
+                $formData["type"] = "form";
+                $formData["content"] = "§l§bCoin";
+                $formData["buttons"] = [
+                      [
+                        'type' => "button",
+                        'text' => "§l§cTesting...",
+                      ],
+                    ];
+						}
+					} */
+				} else {
+				$formPacket->formId = 2211;
+                $formData["type"] = "form";
+                $formData["content"] = "§l§a팀 배틀 ( Team Battle )";
+                $formData["buttons"] = [
+                      [
+                        'type' => "button",
+                        'text' => "§l§a[ §f참가 §a]§r§f ( Join )",
+					],
+					[
+						'type' => "button",
+						'text' => "§l§b[ §f방 생성 §b]§r§f ( Add Room )",
+					],
+					[
+						'type' => "button",
+						'text' => "§l§b[ §f관전 모드 §b]§r§f ( Watch Mode )",
+                      ],
+                    ];
+				}
+			} elseif ($packet->formId == 2211) { // 팀 배틀 폼에 대한 응답
+			$rooms = $Config->roomDB;
                 $event->setCancelled(true);
-				$formPacket->formId = 2226;
+				if ($responseData) {
+                $formPacket->formId = 2212;
+                $formData["type"] = "form";
+                $formData["content"] = "§l§6Team Battle";
+                $formData["buttons"] = [$rooms];
+			} else {
+				$formPacket->formId = 2213;
+                $formData["type"] = "custom_form";
+				$formData["title"] = "§l§d방 생성 ( Add Room )";
+                $formData["content"] = [
+				[
+					'type' => "input",
+					'text' => "§l§b방 이름 ( Room Name )"
+					// 'placeholder' => "§o§c방 이름을 입력 하세요. ( Input the Room Name. )",
+				],
+				[
+					'type' => "toggle",
+					'text' => "§l§aTest",
+					'default' => true,
+				],
+				[
+					'type' => "toggle",
+					'text' => "§l§c욕설 방지 모드 ( Anti-Speech Mode ) ( 오류 ( Error ) )",
+					'default' => false,
+				],
+				[
+					'type' => "dropdown",
+					'options' => ["2 VS 2",(string) "3 VS 3", "4 VS 4"],
+					'text' => "§l§b팀 배틀 모드 ( Team Battle Mode ) ( is Error )",
+						],
+					];
+				}
+			} elseif ($packet->formId == 2213) { // 방 생성 폼에 대한 응답
+			foreach($Config->roomDB [strtolower($name)] [strtolower($roomname)]->getOnlinePlayers() as $inplayer);
+			// $inplayer = foreach($Config->roomDB [strtolower($name)] [strtolower($roomname)]->getOnlinePlayers());
+			$maxplayer = "?";
+			$roomname = "".$responseData[0]."";
+			$rooms = $Config->roomDB;
+                $event->setCancelled(true);
+				if ($responseData) {
+					$player->sendMessage ("§b§l[ §fRPG§b ]§f 방 이름을 입력 하세요! ( Input the Room Name! )");
+				}
+				$Config->roomDB [strtolower($name)] += [strtolower($roomname)];
+/* 			} else {
+				if($responseData == true){
+			}
+				if($responseData == false){
+			} else {
+				if($responseData == true){
+			}
+				if($responseData == false){
+			} else {
+				return true;
+				if($responseData == 1){
+					$Config->roomDB [strtolower($name)] [strtolower($roomname)] += 4;
+				if($responseData == 2){
+					$Config->roomDB [strtolower($name)] [strtolower($roomname)] += 6;
+				}
+				if($responseData == 3){
+					$Config->roomDB [strtolower($name)] [strtolower($roomname)] += 8;
+				} else {
+				$formPacket->formId = 2214;
+                $formData["type"] = "form";
+				$formData["title"] = "{$inplayer}/{$maxplayer}";
+                $formData["buttons"] = [
+				[
+					'type' => "button",
+					'text' => "§l§b준비 ( Preparations )",
+						],
+					]; */
+			} elseif ($packet->formId == 2228) { // 공격 결과 폼에 대한 응답
+                $event->setCancelled(true);
+				$formPacket->formId = 2228;
                     $formData["content"] = "§l§c보스전 ( Boss Battle )";
                     $formData["button1"] = "§l§c[ §f공격 §c]§r§f ( Attack )";
                     $formData["button2"] = "§l§d[ §f방어 §d]§r§f ( Defense )";
@@ -196,6 +319,6 @@ class Main extends PluginBase implements Listener{
             }
             $formPacket->formData = json_encode($formData);
             $player->dataPacket($formPacket);
-        }
+		}
     }
 }
