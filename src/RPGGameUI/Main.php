@@ -22,6 +22,10 @@ use pocketmine\utils;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerInteractEvent;
+# Sound
+use pocketmine\level\sound\AnvilUseSound;
+use pocketmine\level\sound\PopSound;
+use pocketmine\level\sound\ClickSound;
 # UI
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
@@ -31,6 +35,7 @@ use onebone\economyapi\EconomyAPI;
 class Main extends PluginBase implements Listener{
 	public $getOS;
 	public $sender;
+	public $levelrand = mt_rand("1, 100");
     public function onEnable(){
         @mkdir($this->getDataFolder());
         $this->bossDB = new Config ( $this->getDataFolder () . "boss.yml", Config::YAML, [
@@ -43,6 +48,10 @@ class Main extends PluginBase implements Listener{
         $this->levelDB = $this->levelDB->getAll ();
 		$this->pointDB = new Config ( $this->getDataFolder () . "point.yml", Config::YAML, [
 		"기본포인트" => "1500",
+		]);
+        $this->pointDB = $this->pointDB->getAll ();
+		$this->lbhDB = new Config ( $this->getDataFolder () . "liveboss.yml", Config::YAML, [
+		"체력" => "0",
 		]);
         $this->pointDB = $this->pointDB->getAll ();
 		$this->roomDB = new Config ( $this->getDataFolder () . "rooms.yml", Config::YAML);
@@ -308,8 +317,102 @@ class Main extends PluginBase implements Listener{
 					'text' => "§l§b준비 ( Preparations )",
 						],
 					]; */
+						}
+					}
+				}
+			public function liveboss(){
+			$lbps = [$players];
+			$LBH = $Config->lbhDB ["체력"];
+			$formPacket = new ModalFormRequestPacket ();
+            $formPacket->formId = 3000;
+            $formPacket->formData = json_encode([
+              "type"    => "modal",
+              "title"   => "§l§d[ §fRPGGameUI §d]§r§f",
+              "content" => "\n§l§c보스전 참가 인원 : §b{$players}명\n\n§l§cBoss Battle Join Players : §b{$players} Players\n\n\n§l§b보스 체력 : §b{$Config->lbhDB ["체력"]}\n\n§l§bBoss Hearth : §b{$Config->lbhDB ["체력"]}",
+              "button1" => "§l§c[ §f공격 §c]§r§f ( Attack )",
+              "button2" => "§l§d[ §f참가 인원 §d]§r§f ( Join Players )",
+            ]);
+			$sender->dataPacket($formPacket);
+						
+					}
+					
+		public function LiveData(DataPacketReceiveEvent $event){
+        $packet = $event->getPacket();
+        if ($packet instanceof ModalFormResponsePacket) { // 폼에 대한 응답
+            $player = $event->getPlayer();
+            $responseData = json_decode($packet->formData);
+            if (is_null($responseData)) { // 선택없이 닫힌 경우
+                return; // 아무 작동도 하지않고 중단합니다
+            }
+			
+		} elseif ($packet->formId == 3000) 
+{ // 공격 결과 폼에 대한 응답
+			foreach($this->owner->getServer()->getOnlinePlayers() as $players){
+			$AK = mt_rand(10, 100);
+			$LBH = $Config->lbhDB ["체력"];
+                $event->setCancelled(true);
+				if($AK == 10){
+					$LBH -= 10;
+					$this->onSave();
+					$this->liveboss();
+				}
+				if($AK == 20){
+					$LBH -= 20;
+					$this->onSave();
+					$this->liveboss();
+				}
+				if($AK == 30){
+					$LBH -= 30;
+					$this->onSave();
+					$this->liveboss();
+				}
+				if($AK == 40){
+					$LBH -= 40;
+					$this->onSave();
+					$this->liveboss();
+				}
+				if($AK == 50){
+					$LBH -= 50;
+					$this->onSave();
+					$this->liveboss();
+				}
+				if($AK == 60){
+					$LBH -= 60;
+					$this->onSave();
+					$this->liveboss();
+				}
+				if($AK == 70){
+					$LBH -= 70;
+					$this->onSave();
+					$this->liveboss();
+				}
+				if($AK == 80){
+					$LBH -= 80;
+					$this->onSave();
+					$this->liveboss();
+				}
+				if($AK == 90){
+					$LBH -= 90;
+					$this->onSave();
+					$this->liveboss();
+				}
+				if($AK == 100){
+					$LBH -= 100;
+					$this->onSave();
+					$this->liveboss();
+				}
+				if($LBH == 0){
+					$player->broadcastMessage("§l§c[ §0BOSS §c]§r§b >> 보스를 죽여서 참가 인원 전체 에게 30000원을 지급 하였습니다.");
+					$player->addSound(new AnvilUseSound($players));
+			} elseif ($responseData) {
+				$formPacket->formId = 3001;
+                $formData["type"] = "form";
+                $formData["content"] = "§l§a참가자 ( Join Players )";
+                $formData["buttons"] = [$players];
+				}
 			} elseif ($packet->formId == 2228) { // 공격 결과 폼에 대한 응답
                 $event->setCancelled(true);
+				if ($responseData) {
 				$formPacket->formId = 2228;
                     $formData["content"] = "§l§c보스전 ( Boss Battle )";
                     $formData["button1"] = "§l§c[ §f공격 §c]§r§f ( Attack )";
@@ -319,6 +422,5 @@ class Main extends PluginBase implements Listener{
             }
             $formPacket->formData = json_encode($formData);
             $player->dataPacket($formPacket);
-		}
     }
 }
